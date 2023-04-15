@@ -23,7 +23,8 @@ services:
         depends_on:
         - aerospike
         entrypoint:
-        - /run/secrets/discovery
+        - /aerospike/Python/python
+        - /run/secrets/discovery.py
         - "--servicename"
         - aerospikedb
         - "-i"
@@ -31,8 +32,8 @@ services:
         - "-v"
         secrets:
         - source: discoveryfile
-          target: discovery
-          mode: 0750
+          target: discovery.py
+          mode: 0777
 
 networks:
     aerospikenetwork:
@@ -41,6 +42,6 @@ networks:
 
 secrets:
     conffile:
-        file: ./aerospike.conf
+        file: ./aerospike_mesh.conf
     discoveryfile:
         file: ./discovery.py

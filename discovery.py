@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/aerospike/Python/python
 
 # Copyright 2019 Aerospike All rights reserved.
 #
@@ -52,8 +52,8 @@ def runCMD(cmd):
     sys.stdout.write("\n")
     result = proc.stdout.read()
     if args.verbose:
-        print "%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "Running command", cmd)
-        print result
+        print ("%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "Running command", cmd))
+        print (result)
     return result
 
 
@@ -78,33 +78,33 @@ def removeNode(IP, cluster):
 parseArgs()
 
 if args.verbose:
-    print "%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "arguments", args)
+    print ("%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "arguments", args))
 
 lastKnownIPs = []
 while True:
     try:
         ips = socket.gethostbyname_ex(args.servicename)[2]
     except socket.gaierror as e:
-        print "%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), e[1])
+        print ("%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), e[1]))
         if e[0] == -2:
             # EAI_NONAME/resolve error: may mean cluster is destroyed but discovery is kept running
-            print "DNS cleared, resetting history"
+            print ("DNS cleared, resetting history")
             lastKnownIPs = []
             continue
-        else:
+        else: 
             # any others, retry
             if args.verbose:
-                print "%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "unable to connect, fast retry")
+                print ("%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "unable to connect, fast retry"))
             time.sleep(1)
             continue
     except:
         # other connection/resolve error: fast retry
         if args.verbose:
-            print "%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "unable to connect, fast retry")
+            print ("%s %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "unable to connect, fast retry"))
         time.sleep(1)
         continue
     # if no DNS change, sleep
-    print "%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "Found IPs:", ips)
+    print ("%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "Found IPs:", ips))
     if Counter(ips) == Counter(lastKnownIPs):
         time.sleep(args.interval)
         continue
@@ -122,7 +122,7 @@ while True:
                 addNode(newHost, lastKnownIPs)
     lastKnownIPs = ips
     if args.verbose:
-        print "%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), args.servicename, lastKnownIPs)
+        print ("%s %s : %s" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), args.servicename, lastKnownIPs))
     if args.once:
-        print "%s Info command(s) sent. `--once` flag set. Exiting sucessfully" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
+        print ("%s Info command(s) sent. `--once` flag set. Exiting sucessfully" % (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())))
         sys.exit(0)
